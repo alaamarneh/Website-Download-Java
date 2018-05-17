@@ -24,7 +24,7 @@ public class UrlsController{
             URL newUrl = urls.get(i);
             System.out.println("trying to add "+newUrl);
             boolean valid = true;
-// check for validity
+            // check for validity
             Iterator<URL> iterator = mBaseQueue.iterator();
             while (iterator.hasNext()){
                 URL baseUrl = iterator.next();
@@ -51,7 +51,7 @@ public class UrlsController{
     }
 
     /**
-     * get block of urls from running queue (mQueue) and then remove them
+     * get block of urls from running queue (mQueue) and then remove them from the queue
      * @param size : size of block
      * @return : list of urls
      */

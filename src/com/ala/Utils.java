@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
+
     public static void print(List<URL> urls){
         if(urls == null)
             return;
@@ -19,7 +20,7 @@ public class Utils {
     }
 
     /**
-     * this method used to download url index file then extract the urls and saves it to list
+     * this method used to download url index file then extract the urls and saves it in a list
      * @param url : source url
      * @return : returns list of urls
      */
@@ -37,11 +38,13 @@ public class Utils {
 
             List<URL> urls = new ArrayList<>();
             String line;
+            //search fo URLs
             while ( (line=br.readLine()) != null){
                 writer.write(line);
 
                 if (line.contains("href=")){
                     int x=0;
+                    //get all URLs in one line
                     while (true){
                         x=line.indexOf("href=",x+1);
 
@@ -50,17 +53,17 @@ public class Utils {
 
 
                         int start = x+6;
-                        String ch = line.substring(x+5,x+6);
+                        String ch = line.substring(x+5,x+6);// ch will be ' or "
                         if(!(ch.equals("'") || ch.equals("\"")))
                             break;
                         int end = line.indexOf(ch,x+7);
 
                         if(start != -1 && end != -1){
-                            String temp = line.substring(  start   ,   end);
+                            String temp = line.substring(start, end);
                             try {
                                     URI uri = new URI(temp);
                                     if(!uri.isAbsolute())
-                                        urls.add(url.toURI().resolve(uri).toURL());
+                                        urls.add(url.toURI().resolve(uri).toURL()); //if relative resolve it
                                     else
                                         urls.add(uri.toURL());
                             }catch (Exception ex){ex.printStackTrace();}
@@ -82,6 +85,11 @@ public class Utils {
         return null;
     }
 
+    /**
+     * this method returns a name for the file by it's url
+     * @param url : url contains path
+     * @return : suitable name
+     */
     private static String prepareName(URL url) {
         String name;
         if(url.getPath() != null && !url.getPath().isEmpty() && !url.getPath().equals("/")){
