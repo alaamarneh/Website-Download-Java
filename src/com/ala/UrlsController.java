@@ -22,32 +22,26 @@ public class UrlsController{
             return;
         for (int i=0;i<urls.size();i++){
             URL newUrl = urls.get(i);
-            System.out.println("trying to add "+newUrl);
             boolean valid = true;
             // check for validity
             Iterator<URL> iterator = mBaseQueue.iterator();
             while (iterator.hasNext()){
                 URL baseUrl = iterator.next();
 
-                if(baseUrl.sameFile(newUrl)){
+                if(baseUrl.sameFile(newUrl)){ // file exists
                     valid = false;
-                    System.out.println("the same file");
                     break;
                 }
-                if(!baseUrl.getHost().equals(newUrl.getHost())){
+                if(!baseUrl.getHost().equals(newUrl.getHost())){ //not the same host
                     valid =false;
-                    System.out.println("not the same host");
                     break;
                 }
             }
             if(valid){
                 mQueue.add(newUrl);
                 mBaseQueue.add(newUrl);
-                System.out.println(newUrl+" added");
-            }else
-                System.out.println("didnt add");
+            }
         }
-        System.out.println("queue size="+size());
     }
 
     /**

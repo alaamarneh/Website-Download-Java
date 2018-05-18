@@ -8,31 +8,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Utils {
-
-    public static void print(List<URL> urls){
-        if(urls == null)
-            return;
-        System.out.println("print list size="+urls.size());
-        for (URL u :
-                urls) {
-            System.out.println(u);
-        }
-    }
+    public static final String PATH = "C:\\Users\\ALa\\Desktop\\website\\";
 
     /**
      * this method used to download url index file then extract the urls and saves it in a list
      * @param url : source url
      * @return : returns list of urls
      */
-    public static List<URL> extractUrls(URL url){
+    public static List<URL> downloadAndExtractUrls(URL url){
+
         BufferedWriter writer=null;
         try {
             URLConnection connection = url.openConnection();
             InputStreamReader in = new InputStreamReader(connection.getInputStream());
             BufferedReader br = new BufferedReader(in);
-            String name = prepareName(url);
 
-            writer = new BufferedWriter(new FileWriter("C:\\Users\\ALa\\Desktop\\website\\"+name));
+            String name = prepareName(url);
+            writer = new BufferedWriter(new FileWriter(PATH+name));
 
 
 
@@ -44,13 +36,13 @@ public class Utils {
 
                 if (line.contains("href=")){
                     int x=0;
+                    //one line may contains many URLs
                     //get all URLs in one line
                     while (true){
                         x=line.indexOf("href=",x+1);
 
                         if(x == -1)
                             break;
-
 
                         int start = x+6;
                         String ch = line.substring(x+5,x+6);// ch will be ' or "
@@ -86,24 +78,32 @@ public class Utils {
     }
 
     /**
-     * this method returns a name for the file by it's url
+     * this method create directories for url path and returns the file name
      * @param url : url contains path
      * @return : suitable name
      */
     private static String prepareName(URL url) {
-        String name;
-        if(url.getPath() != null && !url.getPath().isEmpty() && !url.getPath().equals("/")){
-            String p = url.getPath();
-            if(p.lastIndexOf("/") == p.length()-1) //if there is / at last , remove it
-                p=p.substring(0,p.length()-1);
 
-            System.out.println(url.getPath());
-            System.out.println(p);
-            name= url.getPath().substring(p.lastIndexOf("/"),p.length());
-            System.out.println("name="+name);
+        if(url.getPath() != null && !url.getPath().isEmpty() && !url.getPath().equals("/")){
+
+
+                String p = url.getPath();
+                if(p.lastIndexOf("/") == p.length()-1) //if there is / at last , remove it
+                    p=p.substring(0,p.length()-1);
+
+                if(p.contains(".")){
+                    String d  = p.substring(0,p.lastIndexOf("/"));
+                    File file = new File(PATH +  d);
+                    file.mkdirs();
+                    return p;
+
+                }else{
+                    File file = new File(PATH+p);
+                    file.mkdirs();
+                    return "index.html";
+                }
+
         }
-        else
-            name = "index.html";
-        return name;
+        return "index.html";
     }
 }
